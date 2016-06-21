@@ -13,6 +13,8 @@
 // })
 var expect = require('chai').expect;
 var chai = require('chai');
+chai.should();
+chai.use(require('chai-things'));
 var Page = require('../models').Page;
 
 
@@ -91,10 +93,58 @@ describe('Page model', function () {
   });
 
   describe('Instance methods', function () {
+    var base;
+    var shared;
+    var noShared;
+    beforeEach(function(done){
+          Page.create({
+            title : "Hello",
+            content : "world",
+            tags : ['qwerty','happy']
+          })
+          .then(function(createdPage){
+            base = createdPage;
+            Page.create({
+              title : "shared",
+              content : "hi",
+              tags : ['qwerty','laslala']
+            })
+            .then(function(createdPage){
+              shared = createdPage;
+              Page.create({
+                title : "nothing",
+                content : "no",
+                tags : ['a','asdf']
+              })
+              .then(function(createdPage){
+                noShared = createdPage;
+                done();
+              })
+            })
+          })
+           .catch(done);
+
+
+    });
     describe('findSimilar', function () {
-      it('never gets itself');
-      it('gets other pages with any common tags');
-      it('does not get other pages without any common tags');
+      it('never gets itself',function(done){
+        base.findSimilar().then(function(returnedPages){
+          expect(returnedPages).to.not.contain.a.thing.with.property('id', base.id);
+          done();
+        }).catch(done);
+      });
+      it('gets other pages with any common tags', function(done){
+        base.findSimilar().then(function(returnedPages){
+          expect(returnedPages).to.contain.a.thing.with.property('id', shared.id);
+          done();
+        }).catch(done);
+      });
+      it('does not get other pages without any common tags', function(done){
+        base.findSimilar().then(function(returnedPages){
+          expect(returnedPages).to.not.contain.a.thing.with.property('id', noShared.id);
+          done();
+        }).catch(done);
+      });
     });
   });
 
