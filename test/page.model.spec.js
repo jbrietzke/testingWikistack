@@ -22,7 +22,7 @@ describe('Page model', function () {
     var page;
     beforeEach(function(){
       page = Page.build();
-      console.log(page);
+      //console.log(page);
     });
     describe('route', function () {
       it('returns the url_name prepended by "/wiki/"', function(){
@@ -38,10 +38,55 @@ describe('Page model', function () {
     });
   });
 
+
+
   describe('Class methods', function () {
+
+    var page;
+    var noTag;
+    beforeEach(function(done){
+      Page.create({
+        title : "Hello",
+        content : "world",
+        tags : ['qwerty','happy']
+      })
+      .then(function(createdPage){
+        page = createdPage;
+        done();
+      })
+       .catch(done);
+    });
+
+
     describe('findByTag', function () {
-      it('gets pages with the search tag');
-      it('does not get pages without the search tag');
+      //console.log(page);
+
+      it('gets pages with the search tag', function(done){
+
+        Page.findByTag('qwerty').then(function(pages){
+
+          expect(pages[0].title).to.equal("Hello");
+          done();
+        })
+        .catch(function(err){
+          console.error(err);
+          done(err);
+        });
+      });
+
+      it('does not get pages without the search tag', function(done){
+
+        Page.findByTag('blahah').then(function(pages){
+          console.log(pages);
+          expect(pages.length).to.equal(0);
+          done();
+        })
+        .catch(function(err){
+          console.error(err);
+          done(err);
+        });
+      });
+
     });
   });
 
