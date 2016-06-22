@@ -7,7 +7,7 @@ server.on('request', require('./app'));
 
 Promise.all([
         models.User.sync({ }),
-        models.Page.sync({ force : true})
+        models.Page.sync({ })
     ])
     .then(function () {
         server.listen(3001, function () {

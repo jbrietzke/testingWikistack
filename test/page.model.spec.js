@@ -165,7 +165,7 @@ describe('Page model', function () {
     });
   });
 
-  describe('Hooks', function () {
+  xdescribe('Hooks', function () {
     var page;
     beforeEach(function(done){
       page = Page.build({
@@ -174,7 +174,7 @@ describe('Page model', function () {
         status: 'open',
       });
     });
-    it('it sets urlTitle based on title before validating', function(){
+    xit('it sets urlTitle based on title before validating', function(){
       // Page.create({title: 'hello', content: 'thing', status: 'open'})
       // .then(function(createdPage){
       //   createdPage.should.have.property('urlTitle')
