@@ -15,12 +15,17 @@ var expect = require('chai').expect;
 var chai = require('chai');
 chai.should();
 chai.use(require('chai-things'));
+var spies = require('chai-spies');
+chai.use(spies)
+chai.use(require('chai-as-promised'));
 var Page = require('../models').Page;
+var Promise = require('bluebird');
+
 
 
 describe('Page model', function () {
 
-  describe('Virtuals', function () {
+  xdescribe('Virtuals', function () {
     var page;
     beforeEach(function(){
       page = Page.build();
@@ -42,7 +47,7 @@ describe('Page model', function () {
 
 
 
-  describe('Class methods', function () {
+  xdescribe('Class methods', function () {
 
     var page;
     var noTag;
@@ -92,7 +97,7 @@ describe('Page model', function () {
     });
   });
 
-  describe('Instance methods', function () {
+  xdescribe('Instance methods', function () {
     var base;
     var shared;
     var noShared;
@@ -123,10 +128,10 @@ describe('Page model', function () {
             })
           })
            .catch(done);
-
-
     });
-    describe('findSimilar', function () {
+
+
+    xdescribe('findSimilar', function () {
       it('never gets itself',function(done){
         base.findSimilar().then(function(returnedPages){
           expect(returnedPages).to.not.contain.a.thing.with.property('id', base.id);
@@ -148,14 +153,41 @@ describe('Page model', function () {
     });
   });
 
-  describe('Validations', function () {
-    it('errors without title');
-    it('errors without content');
-    it('errors given an invalid status');
+  xdescribe('Validations', function () {
+    it('errors without title', function(done){
+      Page.create({content: 'thing', status: 'open'}).should.be.rejected.notify(done);
+    });
+    it('errors without content', function(done){
+      Page.create({title: 'thing', status: 'open'}).should.be.rejected.notify(done);
+    });
+    it('errors given an invalid status',function(done){
+      Page.create({title: 'hellow', content: 'thing', status: 'asdf'}).should.be.rejected.notify(done);
+    });
   });
 
   describe('Hooks', function () {
-    it('it sets urlTitle based on title before validating');
+    var page;
+    beforeEach(function(done){
+      page = Page.build({
+        title: '',
+        content: 'test',
+        status: 'open',
+      });
+    });
+    it('it sets urlTitle based on title before validating', function(){
+      // Page.create({title: 'hello', content: 'thing', status: 'open'})
+      // .then(function(createdPage){
+      //   createdPage.should.have.property('urlTitle')
+      // })
+      //
+      expect(page).to.have.property('urlTitle');
+
+      // var pageCreatingNoTitle = Page.create({title: '', content: 'thing', status: 'open'})
+      // return Promise.all([pageCreating, pageCreatingNoTitle]).spread(function(title, noTitle){
+      //   title.should.eventually.have.property('urlTitle').that.equals('hellow')
+      //   noTitle.should.eventually.have.property('urlTitle')
+      // }).catch(done)
+    });
   });
 
 });

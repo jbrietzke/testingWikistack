@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "chai-as-promised": "^5.3.0",
     "chai-spies": "^0.7.1",
     "chai-things": "^0.2.0",
     "express": "^4.13.4",
